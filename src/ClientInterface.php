@@ -28,8 +28,6 @@ interface ClientInterface
 
     /**
      * Disconnect the connection with the NNTP server.
-     *
-     * @return boolean A boolean indicating if the connection is disconnected.
      */
     public function disconnect();
 
@@ -66,7 +64,7 @@ interface ClientInterface
 
     /**
      * Send the BODY command.
-	 *
+     *
      * @param $article
      *
      * @return \Rvdv\Nntp\Command\BodyCommand
@@ -79,6 +77,16 @@ interface ClientInterface
      * @return \Rvdv\Nntp\Command\HelpCommand
      */
     public function help();
+
+    /**
+     * Send the LIST command.
+     *
+     * @param string|null $keyword
+     * @param string|null $arguments
+     *
+     * @return \Rvdv\Nntp\Command\GroupCommand
+     */
+    public function listGroups($keyword = null, $arguments = null);
 
     /**
      * Send the GROUP command.
@@ -108,7 +116,7 @@ interface ClientInterface
      * @return ResponseInterface
      */
     public function post($groups, $subject, $body, $from, $headers = null);
-    
+
     /**
      * Send the article.
      *
@@ -121,7 +129,7 @@ interface ClientInterface
      * @return ResponseInterface
      */
     public function postArticle($groups, $subject, $body, $from, $headers = null);
-    
+
     /**
      * Send the QUIT command.
      *
