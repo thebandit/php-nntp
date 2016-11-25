@@ -11,7 +11,7 @@
 
 namespace Rvdv\Nntp\Tests\Command;
 
-use Rvdv\Nntp\Command\BodyCommand;
+use Rvdv\Nntp\Command\ArticleCommand;
 use Rvdv\Nntp\Response\Response;
 
 /**
@@ -19,7 +19,7 @@ use Rvdv\Nntp\Response\Response;
  *
  * @author Robin van der Vleuten <robin@webstronauts.co>
  */
-class BodyCommandTest extends CommandTest
+class ArticleCommandTest extends CommandTest
 {
     public function testItExpectsMultilineResponses()
     {
@@ -42,10 +42,10 @@ class BodyCommandTest extends CommandTest
     public function testItReturnsStringWhenExecuting()
     {
         $command = $this->createCommandInstance();
-        $this->assertEquals('BODY 12345', $command->execute());
+        $this->assertEquals('ARTICLE 12345', $command->execute());
     }
 
-    public function testItReceivesAResultWhenBodyFollowsResponse()
+    public function testItReceivesAResultWhenArticleFollowsResponse()
     {
         $command = $this->createCommandInstance();
 
@@ -59,7 +59,7 @@ class BodyCommandTest extends CommandTest
             ->method('getLines')
             ->will($this->returnValue($lines));
 
-        $command->onBodyFollows($response);
+        $command->onArticleFollows($response);
 
         $result = $command->getResult();
 
@@ -119,7 +119,7 @@ class BodyCommandTest extends CommandTest
      */
     protected function createCommandInstance()
     {
-        return new BodyCommand('12345');
+        return new ArticleCommand('12345');
     }
 
     /**
@@ -128,7 +128,7 @@ class BodyCommandTest extends CommandTest
     protected function getRFCResponseCodes()
     {
         return [
-            Response::BODY_FOLLOWS,
+            Response::ARTICLE_FOLLOWS,
             Response::NO_NEWSGROUP_CURRENT_SELECTED,
             Response::NO_SUCH_ARTICLE_NUMBER,
             Response::NO_SUCH_ARTICLE_ID,

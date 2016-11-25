@@ -20,7 +20,7 @@ use Rvdv\Nntp\Response\Response;
  *
  * @author thebandit
  */
-class BodyCommand extends Command implements CommandInterface
+class ArticleCommand extends Command
 {
     /**
      * @var string
@@ -44,7 +44,7 @@ class BodyCommand extends Command implements CommandInterface
      */
     public function execute()
     {
-        return sprintf('BODY %s', $this->article);
+        return sprintf('ARTICLE %s', $this->article);
     }
 
     /**
@@ -53,14 +53,14 @@ class BodyCommand extends Command implements CommandInterface
     public function getExpectedResponseCodes()
     {
         return [
-            Response::BODY_FOLLOWS                  => 'onBodyFollows',
+            Response::ARTICLE_FOLLOWS               => 'onArticleFollows',
             Response::NO_NEWSGROUP_CURRENT_SELECTED => 'onNoNewsGroupCurrentSelected',
             Response::NO_SUCH_ARTICLE_NUMBER        => 'onNoSuchArticleNumber',
             Response::NO_SUCH_ARTICLE_ID            => 'onNoSuchArticleId',
         ];
     }
 
-    public function onBodyFollows(MultiLineResponse $response)
+    public function onArticleFollows(MultiLineResponse $response)
     {
         $lines = $response->getLines();
         $this->result = implode("\r\n", $lines->toArray());
@@ -68,7 +68,7 @@ class BodyCommand extends Command implements CommandInterface
 
     public function onNoNewsGroupCurrentSelected(Response $response)
     {
-        throw new RuntimeException('A group must be selected first before getting an article body.', $response->getStatusCode());
+        throw new RuntimeException('A group must be selected first before getting an article.', $response->getStatusCode());
     }
 
     public function onNoSuchArticleNumber(Response $response)

@@ -3,7 +3,7 @@
 /*
  * This file is part of the NNTP library.
  *
- * (c) Robin van der Vleuten <robinvdvleuten@gmail.com>
+ * (c) Robin van der Vleuten <robin@webstronauts.co>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -17,7 +17,7 @@ use Rvdv\Nntp\Exception\RuntimeException;
 /**
  * Response.
  *
- * @author Robin van der Vleuten <robinvdvleuten@gmail.com>
+ * @author Robin van der Vleuten <robin@webstronauts.co>
  */
 class Response implements ResponseInterface
 {
@@ -29,6 +29,7 @@ class Response implements ResponseInterface
     const CONNECTION_CLOSING = 205; // RFC 3977
     const GROUP_SELECTED = 211; // RFC 3977
     const INFORMATION_FOLLOWS = 215; // RFC 2980
+    const ARTICLE_FOLLOWS = 220; //RFC 3977
     const BODY_FOLLOWS = 222; //RFC 3977
     const OVERVIEW_INFORMATION_FOLLOWS = 224; // RFC 2980
     const ARTICLE_RECEIVED = 240; //RFC 3977

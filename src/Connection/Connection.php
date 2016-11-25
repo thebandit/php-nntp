@@ -3,7 +3,7 @@
 /*
  * This file is part of the NNTP library.
  *
- * (c) Robin van der Vleuten <robinvdvleuten@gmail.com>
+ * (c) Robin van der Vleuten <robin@webstronauts.co>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -20,7 +20,7 @@ use Rvdv\Nntp\Socket\Socket;
 use Rvdv\Nntp\Socket\SocketInterface;
 
 /**
- * @author Robin van der Vleuten <robinvdvleuten@gmail.com>
+ * @author Robin van der Vleuten <robin@webstronauts.co>
  */
 class Connection implements ConnectionInterface
 {
@@ -186,30 +186,33 @@ class Connection implements ConnectionInterface
 
     public function getMultiLineResponse(Response $response)
     {
-        $buffer = '';
+        $lines = [];
 
         while (!$this->socket->eof()) {
-            $buffer .= $this->socket->gets(self::BUFFER_SIZE);
-
-            if ("\n.\r\n" === substr($buffer, -4)) {
-                break;
+            $line = $this->socket->gets(self::BUFFER_SIZE);
+            if (substr($line, -2) !== "\r\n" || strlen($line) < 2) {
+                continue;
             }
 
-            if ($buffer === false) {
-                $this->disconnect();
-                throw new RuntimeException('Incorrect data received from buffer');
+            // Remove CR LF from the end of the line.
+            $line = substr($line, 0, -2);
+
+            // Check if the line terminates the text response.
+            if ($line === '.') {
+                // Return all previous lines.
+                $lines = array_filter($lines);
+                $lines = \SplFixedArray::fromArray($lines);
+                return new MultiLineResponse($response, $lines);
             }
+
+            // If 1st char is '.' it's doubled (NNTP/RFC977 2.4.1).
+            if (substr($line, 0, 2) === '..') {
+                $line = substr($line, 1);
+            }
+
+            // Add the line to the array of lines.
+            $lines[] = $line;
         }
-
-        $lines = explode("\r\n", trim($buffer));
-        if (end($lines) === '.') {
-            array_pop($lines);
-        }
-
-        $lines = array_filter($lines);
-        $lines = \SplFixedArray::fromArray($lines);
-
-        return new MultiLineResponse($response, $lines);
     }
 
     public function getCompressedResponse(Response $response)
