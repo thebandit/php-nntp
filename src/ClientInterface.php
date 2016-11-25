@@ -70,7 +70,16 @@ interface ClientInterface
      * @return \Rvdv\Nntp\Command\BodyCommand
      */
     public function body($article);
-
+	
+	/**
+     * Send the HEAD command.
+     *
+     * @param $article
+     *
+     * @return \Rvdv\Nntp\Command\HeadCommand
+     */
+    public function head($article);
+	
     /**
      * Send the HELP command.
      *
